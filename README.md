@@ -39,3 +39,24 @@ Launching (testnet) R Shiny interface:
 ```
 TownforgeR::shinyTF("http://127.0.0.1:28881/json_rpc")
 ```
+
+## Running TownforgeR on Shiny Server Open Source (Ubuntu 20.04)
+
+(In part based on https://stackoverflow.com/questions/37830819/developing-shiny-app-as-a-package-and-deploying-it-to-shiny-server#49623819 )
+
+Install Shiny Server. Guide for installing on a Virtual Private Server (VPS):
+https://deanattali.com/2015/05/09/setup-rstudio-shiny-server-digital-ocean/
+
+Install the TownforgeR package for all users:
+
+```
+sudo su - -c "R -e \"devtools::install_github('Syksy/TownforgeR')\""
+```
+
+Then create a file at ``/srv/shiny-server/TownforgeR/app.R`` containing the following:
+
+```
+shiny::shinyOptions(start.townforged = TRUE)
+TownforgeR::shinyTF("http://127.0.0.1:28881/json_rpc")
+
+```

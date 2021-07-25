@@ -186,6 +186,10 @@ tf_rpc_curl <- function(
     }
   }
   
+  if (is.null(rcp.ret)) {
+    stop("Cannot connect to townforged. Is townforged running?")
+  }
+  
   if (num.as.string) {
     rcp.ret <- gsub("(: )([-0123456789.]+)([,\n\r])", "\\1\"\\2\"\\3", rcp.ret )
   }
