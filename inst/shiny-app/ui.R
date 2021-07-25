@@ -5,8 +5,6 @@
 #'
 #' Description
 
-load("R/sysdata.rda")
-# A little hacky, but it's the only way I can get package to build.
 
 uiTF <- shiny::navbarPage(paste("TownforgeR", gsub("`|´", "", packageVersion("TownforgeR"))),
   theme = bslib::bs_theme(bootswatch = "minty"),
