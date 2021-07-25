@@ -76,7 +76,7 @@ setClass("tf_lot",
 	}
 )
 
-#' S4 creator
+#' S4 creator for tf_lot
 #'
 #' Description
 #' 
@@ -85,6 +85,7 @@ tf_lot <- function(
 	id,
 	url = "http://127.0.0.1:28881/json_rpc"
 ){
+	# Sanity checks
 	if(!class(id)=="numeric" | missing(id)) stop("tf_lot should be queried with an numeric 'id'")
 	# Additional fields would be available via RPC, taking the most important ones
 	flag <- TownforgeR::tf_rpc_curl(url = url, method="cc_get_flag", params = list(id = id))$result
