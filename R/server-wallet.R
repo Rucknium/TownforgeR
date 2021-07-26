@@ -87,15 +87,19 @@ tf_server_wallet_load <- function(wallet.username, wallet.password, wallet.direc
   
   ss.output <- system("ss -tunlp | grep townforge-wallet-rpc", intern = TRUE)
   # https://linuxize.com/post/check-listening-ports-linux/
-  ss.output.df <- as.data.frame(readr::read_fwf(ss.output, readr::fwf_empty(ss.output, 
-    col_names = c("Netid", "State", "Recv.Q", "Send.Q", "Local.Address.Port", "Peer.Address.Port", "Process"))))
-  
-  ports.listened.to <- gsub(".+:", "", ss.output.df$Local.Address.Port)
-  candidate.ports <- 63079:(63079 + 100)
-  candidate.ports <- setdiff(candidate.ports, ports.listened.to)
-  stopifnot(length(candidate.ports) > 5) # Need at least safety margin of 5 ports available. TODO: re-consider these limits
-  wallet.rpc.bind.port <- sample(candidate.ports, size = 1)
-  # choose a random port from the set
+  if (length(ss.output) > 0) {
+    ss.output.df <- as.data.frame(readr::read_fwf(ss.output, readr::fwf_empty(ss.output, 
+      col_names = c("Netid", "State", "Recv.Q", "Send.Q", "Local.Address.Port", "Peer.Address.Port", "Process"))))
+    
+    ports.listened.to <- gsub(".+:", "", ss.output.df$Local.Address.Port)
+    candidate.ports <- 63079:(63079 + 100)
+    candidate.ports <- setdiff(candidate.ports, ports.listened.to)
+    stopifnot(length(candidate.ports) > 5) # Need at least safety margin of 5 ports available. TODO: re-consider these limits
+    wallet.rpc.bind.port <- sample(candidate.ports, size = 1)
+    # choose a random port from the set
+  } else {
+    wallet.rpc.bind.port <- 63079
+  }
   
   system(paste0("townforge-wallet-rpc --wallet-file ",
     wallet.directory, "/", wallet.username, " --testnet --daemon-port 28881 --prompt-for-password --rpc-bind-port ",
