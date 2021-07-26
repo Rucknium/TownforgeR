@@ -103,8 +103,8 @@ tf_server_wallet_load <- function(wallet.username, wallet.password, wallet.direc
   
   system(paste0("townforge-wallet-rpc --wallet-file ",
     wallet.directory, "/", wallet.username, " --testnet --daemon-port 28881 --prompt-for-password --rpc-bind-port ",
-    wallet.rpc.bind.port, "--rpc-login TownforgeR:", wallet.rpc.password),
-    input = "wallet.password"
+    wallet.rpc.bind.port, " --rpc-login TownforgeR:", wallet.rpc.password),
+    input = wallet.password
   )
   
   list(wallet.rpc.bind.port = wallet.rpc.bind.port, wallet.rpc.password = wallet.rpc.password)
