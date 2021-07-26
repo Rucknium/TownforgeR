@@ -24,11 +24,13 @@ serverTF <- function(input, output, session){
     test.townforged.running <- system("pgrep townforged", intern = TRUE)
     # https://www.techolac.com/linux/bash-check-if-process-is-running-or-not-on-linux-unix/
     if (length(test.townforged.running) == 0) {
+      waiter$show()
       system("townforged --testnet --non-interactive --rpc-bind-port 28881", wait = FALSE,
         ignore.stdout = TRUE, ignore.stderr = TRUE)
       # Make sure to have townforged in /usr/local/bin
       Sys.sleep(10)
       # Sleep 10 seconds to let Townforged have a chance to boot up
+      waiter$hide()
     }
   } else {
     # If not Linux or macOS, then issue command regardless

@@ -35,7 +35,7 @@ tf_server_wallet_restore <- function(wallet.restore.username, wallet.restore.pas
   
   wallet.restore.seed.words <- paste0(wallet.restore.seed.words, collapse = " ")
   
-  system(paste0("townforge-wallet-cli --generate-new-wallet=", 
+  townforge.wallet.cli.shell.output <- system(paste0("townforge-wallet-cli --generate-new-wallet=", 
     wallet.directory, "/", wallet.restore.username, " --testnet --restore-deterministic-wallet"),
     wait = TRUE,
     input = c(
@@ -46,10 +46,12 @@ tf_server_wallet_restore <- function(wallet.restore.username, wallet.restore.pas
       "0", # "Restore from specific blockchain height (optional, default 0), or alternatively from specific date (YYYY-MM-DD):"
       "No", # "The daemon is not set up to background mine....Do you want to do it now? (Y/Yes/N/No):"
       "exit" # exit after sync
-    ))
+    ), intern = TRUE) # TODO: WARNING! Insecure since seed words go to  alog file
   # See also https://github.com/monero-project/monero/issues/3131
   # Hmm I guess I could have just done restore_deterministic_wallet in the wallet RPC instead of using input:
   # https://www.getmonero.org/resources/developer-guides/wallet-rpc.html#restore_deterministic_wallet
+  
+  print(townforge.wallet.cli.shell.output)
   
   return(invisible(NULL))
 }
