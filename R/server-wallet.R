@@ -82,7 +82,7 @@ tf_server_wallet_load <- function(wallet.username, wallet.password, wallet.direc
   wallet.files <- list.files(wallet.directory)
   stopifnot( any(wallet.username %in% wallet.files)) # any() for safety in case somehow we get a vector
   
-  wallet.rpc.password <- paste0(sample(c(LETTERS, letters), 10, replace = TRUE), collapse = TRUE)
+  wallet.rpc.password <- paste0(sample(c(LETTERS, letters), 10, replace = TRUE), collapse = "")
   # TODO: Maybe have a more cryptographically secure RNG. This password is not critical, however
   
   ss.output <- system("ss -tunlp | grep townforge-wallet-rpc", intern = TRUE)
