@@ -157,7 +157,7 @@ serverTF <- function(input, output, session){
   
   shiny::observeEvent(input$wallet_load_submit_button, {
     
-    wallet.directory
+    wallet.directory <- "/home/shiny/TownforgeR-wallets"
     # TODO: This is hard-coded now. Want to make it a changeable argument
     
     loaded.wallet <- TownforgeR::tf_server_wallet_load(wallet.username = input$wallet_load_username, 
@@ -185,7 +185,7 @@ serverTF <- function(input, output, session){
     
     waiter$show()
     
-    wallet.directory
+    wallet.directory <- "/home/shiny/TownforgeR-wallets"
     # TODO: This is hard-coded now. Want to make it a changeable argument
     
     TownforgeR::tf_server_wallet_restore(wallet.restore.username = input$wallet_restore_username, 

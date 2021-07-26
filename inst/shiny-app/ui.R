@@ -144,9 +144,7 @@ uiTF <- shiny::navbarPage(paste("TownforgeR", gsub("`|´", "", packageVersion("T
           condition = "output.server_wallet_init_disappears != true",
           shiny::h2("WARNING: Use of custodial wallet may be insecure. Code has not been reviewed for security issues."),
           shiny::br(),
-          
           shiny::h5(""),
-          
           shiny::radioButtons("server_wallet_startup_choice",
             "Do you need to register (restore) a wallet in the TownforgeR server or do you just need to log in to an already-registered wallet?",
             # https://english.stackexchange.com/questions/5302/log-in-to-or-log-into-or-login-to
