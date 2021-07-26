@@ -51,7 +51,7 @@ tf_server_wallet_restore <- function(wallet.restore.username, wallet.restore.pas
   # Hmm I guess I could have just done restore_deterministic_wallet in the wallet RPC instead of using input:
   # https://www.getmonero.org/resources/developer-guides/wallet-rpc.html#restore_deterministic_wallet
   
-  print(townforge.wallet.cli.shell.output)
+  #print(townforge.wallet.cli.shell.output)
   
   return(invisible(NULL))
 }
@@ -79,6 +79,7 @@ tf_server_wallet_restore <- function(wallet.restore.username, wallet.restore.pas
 tf_server_wallet_load <- function(wallet.username, wallet.password, wallet.directory) {
   
   stopifnot(gsub("[0-9A-Za-z]", "", wallet.username) != 0) # stop if not alphanumeric
+  stopifnot(gsub("[0-9A-Za-z]", "", wallet.password) != 0)
   wallet.files <- list.files(wallet.directory)
   stopifnot( any(wallet.username %in% wallet.files)) # any() for safety in case somehow we get a vector
   
@@ -101,10 +102,15 @@ tf_server_wallet_load <- function(wallet.username, wallet.password, wallet.direc
     wallet.rpc.bind.port <- 63079
   }
   
+  #print(paste0("townforge-wallet-rpc --wallet-file ",
+  #  wallet.directory, "/", wallet.username, " --testnet --daemon-port 28881 --prompt-for-password --rpc-bind-port ",
+  #  wallet.rpc.bind.port, " --disable-rpc-login"))
+  
   system(paste0("townforge-wallet-rpc --wallet-file ",
-    wallet.directory, "/", wallet.username, " --testnet --daemon-port 28881 --prompt-for-password --rpc-bind-port ",
-    wallet.rpc.bind.port, " --disable-rpc-login"), #" --rpc-login TownforgeR:", wallet.rpc.password),
-    input = wallet.password
+    wallet.directory, "/", wallet.username, " --testnet --daemon-port 28881 --rpc-bind-port ",
+    wallet.rpc.bind.port, " --disable-rpc-login --password ", wallet.password), #" --rpc-login TownforgeR:", wallet.rpc.password),
+    # input = wallet.password, --prompt-for-password
+    wait = FALSE
   )
   
   wallet.rpc.password <- ""

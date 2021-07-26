@@ -202,8 +202,11 @@ serverTF <- function(input, output, session){
     loaded.wallet <- TownforgeR::tf_server_wallet_load(wallet.username = input$wallet_load_username, 
       wallet.password = input$wallet_load_password, wallet.directory = wallet.directory)
     
+    shiny::withProgress(message = "Starting townforge-wallet-rpc...", Sys.sleep(10))
+    
     session.vars$wallet_rpc_port <- loaded.wallet$wallet.rpc.bind.port
     session.vars$wallet_rpc_password <- loaded.wallet$wallet.rpc.password
+    #print(session.vars$wallet_rpc_port)
     
     wallet_balance <- TownforgeR::tf_rpc_curl(url.rpc = paste0("http://127.0.0.1:", session.vars$wallet_rpc_port, "/json_rpc"),
       method ="get_balance") # , userpwd = paste0("TownforgeR:", session.vars$wallet_rpc_password))

@@ -163,7 +163,7 @@ uiTF <- shiny::navbarPage(paste("TownforgeR", gsub("`|´", "", packageVersion("T
               "wallet_restore_username", label = "Username to log in to the custodial wallet in the future. Does not have to be your player name. Letters and numbers only; no spaces.", 
               value = "", width = NULL, placeholder = ""),
             shiny::textInput(
-              "wallet_restore_password", label = "Password to log in to the custodial wallet in the future:", 
+              "wallet_restore_password", label = "Password to log in to the custodial wallet in the future. LETTERS AND NUMBERS ONLY. NO SPACES:", 
               value = "", width = NULL, placeholder = ""),
             shiny::actionButton("wallet_restore_submit_button", "Submit")
           ),
