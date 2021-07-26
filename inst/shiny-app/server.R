@@ -20,6 +20,25 @@ serverTF <- function(input, output, session){
   ))
   # https://rstudio.github.io/bslib/articles/bslib.html#dynamic-theming
   
+  if (Sys.info()["sysname"] %in% c("Linux", "Darwin")) {
+    test.townforged.running <- system("pgrep townforged", intern = TRUE)
+    # https://www.techolac.com/linux/bash-check-if-process-is-running-or-not-on-linux-unix/
+    if (length(test.townforged.running) == 0) {
+      system("townforged --testnet --non-interactive --rpc-bind-port 28881", wait = FALSE,
+        ignore.stdout = TRUE, ignore.stderr = TRUE)
+      # Make sure to have townforged in /usr/local/bin
+      Sys.sleep(10)
+      # Sleep 10 seconds to let Townforged have a chance to boot up
+    }
+  } else {
+    # If not Linux or macOS, then issue command regardless
+    system("townforged --testnet --non-interactive --rpc-bind-port 28881", wait = FALSE,
+      ignore.stdout = TRUE, ignore.stderr = TRUE)
+    # Make sure to have townforged in /usr/local/bin
+    Sys.sleep(10)
+  }
+  
+  
   session.vars <- shiny::reactiveValues(
     wallet_rpc_port = "",
     wallet_rpc_password = "",
