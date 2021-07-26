@@ -187,18 +187,16 @@ serverTF <- function(input, output, session){
     session.vars$wallet_rpc_port <- loaded.wallet$wallet.rpc.bind.port
     session.vars$wallet_rpc_password <- loaded.wallet$wallet.rpc.password
     
-    session.vars$wallet_rpc_port <- input$port_wallet_rpc
-    
     wallet_balance <- TownforgeR::tf_rpc_curl(url.rpc = paste0("http://127.0.0.1:", session.vars$wallet_rpc_port, "/json_rpc"),
       method ="get_balance", userpwd = paste0("TownforgeR:", session.vars$wallet_rpc_password))
     
     #print(wallet_balance)
     
-    output$wallet_balance_text <-
+    output$server_wallet_balance_text <-
       shiny::renderText(paste0( "Wallet balance: ", prettyNum(wallet_balance$result$balance / gold.unit.divisor, big.mark = ","),
         "<br>In-game account balance: ",  prettyNum(wallet_balance$result$cc_balance / gold.unit.divisor, big.mark = ",") ) )
     
-    output$wallet_init_disappears <- shiny::reactive(TRUE)
+    output$server_wallet_init_disappears <- shiny::reactive(TRUE)
     
   })
   
