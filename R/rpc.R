@@ -130,6 +130,7 @@ tf_rpc_curl <- function(
 	# - cc_get_stats(self):
 	method = "get_block_count",
 	params = list(),
+  userpwd = "",
   num.as.string = FALSE,
   nonce.as.string = FALSE,
   verbatim.replace = NULL,
@@ -165,9 +166,9 @@ tf_rpc_curl <- function(
     )
   }
   
-  
   rcp.ret <- 	tryCatch(RCurl::postForm(url.rpc,
     .opts = list(
+      userpwd = userpwd,
       postfields = json.ret,
       httpheader = c('Content-Type' = 'application/json', Accept = 'application/json')
       # https://stackoverflow.com/questions/19267261/timeout-while-reading-csv-file-from-url-in-r
@@ -178,6 +179,7 @@ tf_rpc_curl <- function(
     while (length(rcp.ret) == 0) {
       rcp.ret <- 	tryCatch(RCurl::postForm(url.rpc,
         .opts = list(
+          userpwd = userpwd,
           postfields = json.ret,
           httpheader = c('Content-Type' = 'application/json', Accept = 'application/json')
           # https://stackoverflow.com/questions/19267261/timeout-while-reading-csv-file-from-url-in-r

@@ -3,6 +3,10 @@ infl.effects.ls <- TownforgeR::tf_get_influence_effects()
 
 save(infl.effects.ls, file = "data/infl_effects_ls.rda")
 
+seed.word.list.v <- TownforgeR::tf_get_seed_words_list()
+
+save(seed.word.list.v, file = "data/seed_word_list.rda")
+
 
 building.names.contents <- 
   c("EMPTY"   ,  0, "ROLE_EMPTY",        "Empty",
@@ -91,7 +95,7 @@ gold.unit.divisor <- 10e+7
 
 save(gold.unit.divisor, file = "data/gold_unit_divisor.rda")
 
-save(infl.effects.ls, building.names.df, building.names.v, min.size.scale.df, 
+save(infl.effects.ls, seed.word.list.v, building.names.df, building.names.v, min.size.scale.df, 
   commodity.id.key, commodity.id.key.v, commodities.buildings.produce.df,
   gold.unit.divisor, file = "R/sysdata.rda")
 

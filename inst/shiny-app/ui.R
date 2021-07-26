@@ -81,7 +81,7 @@ uiTF <- shiny::navbarPage(paste("TownforgeR", gsub("`|´", "", packageVersion("T
       shiny::column(12,
         shiny::conditionalPanel(
           condition = "output.wallet_init_disappears != true",
-          shiny::h2("WARNING: Use of wallet operations may be insecure. Code has not been reviewed for security issues "),
+          shiny::h2("WARNING: Use of wallet operations may be insecure. Code has not been reviewed for security issues."),
           shiny::br(),
           shiny::h5("To use wallet operations, townforge-wallet-rpc must be started. Shiny can start it or you can start it yourself. RPC login must be disabled."),
           shiny::h5("A suggested way to start townforge-wallet-rpc is:"),
@@ -133,6 +133,64 @@ uiTF <- shiny::navbarPage(paste("TownforgeR", gsub("`|´", "", packageVersion("T
           shiny::actionButton("deposit_submit_button", "Submit"),
           
           shiny::verbatimTextOutput("deposit_tx_hash")
+        )
+      )
+    )
+  ),
+  shiny::tabPanel("Custodial Wallet",
+    shiny::fluidRow(
+      shiny::column(12,
+        shiny::conditionalPanel(
+          condition = "output.server_wallet_init_disappears != true",
+          shiny::h2("WARNING: Use of custodial wallet may be insecure. Code has not been reviewed for security issues."),
+          shiny::br(),
+          
+          shiny::h5(""),
+          
+          shiny::radioButtons("server_wallet_startup_choice",
+            "Do you need to register (restore) a wallet in the TownforgeR server or do you just need to log in to an already-registered wallet?",
+            # https://english.stackexchange.com/questions/5302/log-in-to-or-log-into-or-login-to
+            c("Register a wallet" = "restore",
+              "Log in to an already-registered wallet" = "load"),
+            selected = character(0), width = "100%"),
+          shiny::conditionalPanel(
+            condition = "input.server_wallet_startup_choice == 'restore'",
+            shiny::textInput(
+              "wallet_restore_seed_words", label = "Input 25 seed words for wallet restoration:", 
+              value = "", width = NULL, placeholder = ""),
+            shiny::textInput(
+              "wallet_restore_seed_offset_passphrase", label = "Input seed offset passphrase for wallet restoration. Leave blank if there is no offset passphrase.", 
+              value = "", width = NULL, placeholder = ""),
+            shiny::textInput(
+              "wallet_restore_username", label = "Username to log in to the custodial wallet in the future. Does not have to be your player name. Letters and numbers only; no spaces.", 
+              value = "", width = NULL, placeholder = ""),
+            shiny::textInput(
+              "wallet_restore_password", label = "Password to log in to the custodial wallet in the future:", 
+              value = "", width = NULL, placeholder = ""),
+            shiny::actionButton("wallet_restore_submit_button", "Submit")
+          ),
+          shiny::conditionalPanel(
+            condition = "input.server_wallet_startup_choice == 'load'",
+            shiny::textInput(
+              "wallet_load_username", label = "Username to log in to the custodial wallet:", 
+              value = "", width = NULL, placeholder = ""),
+            shiny::textInput(
+              "wallet_load_password", label = "Password to log in to the custodial wallet:", 
+              value = "", width = NULL, placeholder = ""),
+            shiny::actionButton("wallet_load_submit_button", "Submit")
+          )
+        ),
+        shiny::conditionalPanel(
+          condition = "output.server_wallet_init_disappears == true",
+          shiny::h4("Deposit to your game account"),
+          shiny::br(),
+          shiny::htmlOutput("server_wallet_balance_text"),
+          shiny::br(),
+          shiny::numericInput("server_wallet_deposit_amount", label = "Deposit amount:", value = 0, min = 0),
+          
+          shiny::actionButton("server_wallet_deposit_submit_button", "Submit"),
+          
+          shiny::verbatimTextOutput("server_wallet_deposit_tx_hash")
         )
       )
     )

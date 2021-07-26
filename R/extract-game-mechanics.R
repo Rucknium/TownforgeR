@@ -106,6 +106,27 @@ tf_get_min_flag_size_data <- function(source.dir = "https://git.townforge.net/to
   min.size.scale.df
 }
 
-  
+
+
+
+
+#' Gather English wallet mnemonic seed words list
+#'
+#' Description
+#'
+#' @param source.url directory of Townforge source
+#' @param ... TODO
+#'
+#' @details Construct influence effects matrix
+#'
+#' @export
+tf_get_seed_words_list <- function(source.url = "https://raw.githubusercontent.com/monero-project/monero/master/src/mnemonics/english.h", ...) {
+  seed.words <- readLines(source.url)
+  seed.words.begin.ind <- grep("static constexpr const char", seed.words) + 2
+  seed.words.end.ind <- grep("set_words", seed.words) - 2
+  seed.words <- seed.words[seed.words.begin.ind:seed.words.end.ind]
+  seed.words <- gsub("[^a-z]", "", seed.words)
+  seed.words
+}
   
 

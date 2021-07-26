@@ -20,15 +20,12 @@ serverTF <- function(input, output, session){
   ))
   # https://rstudio.github.io/bslib/articles/bslib.html#dynamic-theming
   
-  
   session.vars <- shiny::reactiveValues(
     wallet_rpc_port = "",
+    wallet_rpc_password = "",
     best.flag.candidates.ls = NULL,
     cities = TownforgeR::tf_parse_cities(url.townforged)
   )
-  
-  
-  
   
   # Need to load select options on the run
   shiny::updateSelectInput(session, "item_inspect",
@@ -148,6 +145,73 @@ serverTF <- function(input, output, session){
     output$deposit_tx_hash <- shiny::renderText(paste0("Transaction hash: ", deposit_result$result$tx_hash_list) )
     
   })
+  
+  
+  
+  output$server_wallet_init_disappears <- shiny::reactive(FALSE)
+  
+  shiny::outputOptions(output, "server_wallet_init_disappears", suspendWhenHidden = FALSE)
+  # See https://shinydata.wordpress.com/2015/02/02/a-few-things-i-learned-about-shiny-and-reactive-programming/
+  
+  
+  
+  shiny::observeEvent(input$wallet_load_submit_button, {
+    
+    wallet.directory
+    # TODO: This is hard-coded now. Want to make it a changeable argument
+    
+    loaded.wallet <- TownforgeR::tf_server_wallet_load(wallet.username = input$wallet_load_username, 
+      wallet.password = input$wallet_load_password, wallet.directory = wallet.directory)
+    
+    session.vars$wallet_rpc_port <- loaded.wallet$wallet.rpc.bind.port
+    session.vars$wallet_rpc_password <- loaded.wallet$wallet.rpc.password
+    
+    session.vars$wallet_rpc_port <- input$port_wallet_rpc
+    
+    wallet_balance <- TownforgeR::tf_rpc_curl(url.rpc = paste0("http://127.0.0.1:", session.vars$wallet_rpc_port, "/json_rpc"),
+      method ="get_balance", userpwd = paste0("TownforgeR:", session.vars$wallet_rpc_password))
+    
+    #print(wallet_balance)
+    
+    output$wallet_balance_text <-
+      shiny::renderText(paste0( "Wallet balance: ", prettyNum(wallet_balance$result$balance / gold.unit.divisor, big.mark = ","),
+        "<br>In-game account balance: ",  prettyNum(wallet_balance$result$cc_balance / gold.unit.divisor, big.mark = ",") ) )
+    
+    output$wallet_init_disappears <- shiny::reactive(TRUE)
+    
+  })
+  
+  shiny::observeEvent(input$wallet_restore_submit_button, {
+    
+    waiter$show()
+    
+    wallet.directory
+    # TODO: This is hard-coded now. Want to make it a changeable argument
+    
+    TownforgeR::tf_server_wallet_restore(wallet.restore.username = input$wallet_restore_username, 
+      wallet.restore.password = input$wallet_restore_password, 
+      wallet.restore.seed.words = input$wallet_restore_seed_words, 
+      wallet.restore.seed.offset.passphrase = input$wallet_restore_seed_offset_passphrase, 
+      wallet.directory) 
+    
+    waiter$hide()
+    
+  })
+  
+  
+  shiny::observeEvent(input$server_wallet_deposit_submit_button, {
+    
+    deposit_result <- TownforgeR::tf_rpc_curl(url.rpc = paste0("http://127.0.0.1:", session.vars$wallet_rpc_port, "/json_rpc"),
+      method = "cc_deposit", params = list(amount = input$server_wallet_deposit_amount * gold.unit.divisor),
+      userpwd = paste0("TownforgeR:", session.vars$wallet_rpc_password))
+    # FIXED: TODO: cc_deposit won't accept scientific notation, it seems, so "large" deposit amounts fail if not
+    # formatted with formatC(). Need a general fix to this. maybe in tf_rpc_curl()
+    
+    output$server_wallet_deposit_tx_hash <- shiny::renderText(paste0("Transaction hash: ", deposit_result$result$tx_hash_list) )
+    
+  })
+  
+  
   
   shiny::observeEvent(input$depth_chart_button, {
     

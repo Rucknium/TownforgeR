@@ -2,7 +2,7 @@
 % Please edit documentation in R/S4_lot.R
 \name{tf_lot}
 \alias{tf_lot}
-\title{S4 creator}
+\title{S4 creator for tf_lot}
 \usage{
 tf_lot(id, url = "http://127.0.0.1:28881/json_rpc")
 }

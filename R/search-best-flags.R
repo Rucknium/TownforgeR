@@ -1,7 +1,7 @@
 #' tf_search_best_flags
 #'
 #' Brute force search for flags with best production and return on investment
-#'f
+#'
 #' @param url.rpc TODO
 #' @param building.type TODO
 #' @param economic.power TODO

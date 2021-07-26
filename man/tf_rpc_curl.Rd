@@ -8,6 +8,7 @@ tf_rpc_curl(
   url.rpc = "http://127.0.0.1:18881/json_rpc",
   method = "get_block_count",
   params = list(),
+  userpwd = "",
   num.as.string = FALSE,
   nonce.as.string = FALSE,
   verbatim.replace = NULL,
