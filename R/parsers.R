@@ -227,8 +227,10 @@ tf_shiny_item_info <- function(
 #'
 #' @export
 tf_parse_cities <- function(url.rpc) {
-  cities.df <- as.data.frame(TownforgeR::tf_rpc_curl(url.rpc, 
-    method ="cc_get_cities", params = list())$result$cities)
+  cities.df <- do.call(rbind,
+    lapply(TownforgeR::tf_rpc_curl(url.rpc, 
+      method ="cc_get_cities", params = list())$result$cities,
+      as.data.frame) )
   cities.v <- cities.df$city_id
   names(cities.v) <- cities.df$name
   list(cities.df = cities.df, cities.v = cities.v)
