@@ -376,7 +376,13 @@ serverTF <- function(input, output, session){
     
     output$optimize_flag_chart <- shiny::renderPlot({
       
-      best.flag.map.mat <- as.matrix(Matrix::t(best.flag.map.ls$map.mat))
+      best.flag.map.mat <- as.matrix(Matrix::t(
+        best.flag.map.ls$map.mat[
+          seq(1, nrow(best.flag.map.ls$map.mat), by = 8), 
+          seq(1, ncol(best.flag.map.ls$map.mat), by = 8)]
+        ))
+      # Reduce object size to 1/64 by taking only 1/8 of rows and 1/8 of columns
+      # Minimum flag size is 8x8
       best.flag.map.mat[best.flag.map.mat == 0] <- NA
       best.flag.map.mat.dim <- dim(best.flag.map.mat)
       # See for why must transpose:
@@ -393,8 +399,8 @@ serverTF <- function(input, output, session){
         useRaster = TRUE)
       
       text(
-        best.flag.map.ls$candidates.df$x0/best.flag.map.mat.dim[1], 
-        best.flag.map.ls$candidates.df$y0/best.flag.map.mat.dim[2], 
+        floor(best.flag.map.ls$candidates.df$x0/8)/best.flag.map.mat.dim[1], 
+        floor(best.flag.map.ls$candidates.df$y0/8)/best.flag.map.mat.dim[2], 
         labels = c(LETTERS, letters)[seq_len(nrow(best.flag.map.ls$candidates.df))],
         cex = 2, xpd = NA) # font = 2 is bold font
       
