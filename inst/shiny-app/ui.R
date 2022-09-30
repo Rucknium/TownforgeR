@@ -198,6 +198,7 @@ uiTF <- shiny::navbarPage(paste("TownforgeR", gsub("`|´", "", packageVersion("T
     shiny::plotOutput("depth_chart")
   ),
   shiny::tabPanel("Map",
+    shiny::selectInput("map_city", "Town:", choices = NULL),
     shiny::actionButton("map_button", "Show map"),
     shiny::plotOutput("map_chart", height = "1000px")
   ),

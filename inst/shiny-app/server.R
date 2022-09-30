@@ -271,6 +271,8 @@ serverTF <- function(input, output, session){
     
     output$map_chart <- shiny::renderPlot({
       
+      city <- as.numeric(input$map_city)
+      
       flags.ret <- TownforgeR::tf_rpc_curl(url.rpc = url.townforged, method = "cc_get_flags")$result$flags
       max.flag.id <- flags.ret[[length(flags.ret)]]$id
       
@@ -281,7 +283,7 @@ serverTF <- function(input, output, session){
         if (i == 21 & packageVersion("TownforgeR") == "0.0.15") { next }
         # far away flag in testnet
         ret <- TownforgeR::tf_rpc_curl(url.rpc = url.townforged, method = "cc_get_flag", params = list(id = i))
-        if (any(names(ret) == "error") || ret$result$city > 0)  { next }
+        if (any(names(ret) == "error") || ret$result$city != city)  { next }
         coords.mat[i, "x0"] <- ret$result$x0
         coords.mat[i, "x1"] <- ret$result$x1
         coords.mat[i, "y0"] <- ret$result$y0
@@ -308,6 +310,11 @@ serverTF <- function(input, output, session){
       legend("topright", legend = owner.df$owner.name, fill = owner.df$owner.id) #, horiz = TRUE)
       
     })
+  })
+  
+  observe({
+    shiny::updateSelectInput(session, "map_city", 
+      choices = session.vars$cities$cities.v)
   })
   
   shiny::observeEvent(input$influence_button, {
