@@ -26,27 +26,28 @@ tf_gold_flow <- function(url.rpc) {
   balance <- sapply(events, FUN = function(x) {y <- x$balance; ifelse(length(y) > 0, y, NA)})
   cmd <- sapply(events, FUN = function(x) {y <- x$cmd; ifelse(length(y) > 0, y, NA)})
   
-  events <- data.table(event, account, flag, balance, cmd)
+  events <- data.table::data.table(event, account, flag, balance, cmd)
   
-  accounts <- data.table::rbindlist(TownforgeR::tf_rpc_curl(method = "cc_get_accounts", params = list(), 
-    url.rpc = url.townforged, keep.trying.rpc = TRUE)$result$accounts)
+  accounts <- data.table::rbindlist(TownforgeR::tf_rpc_curl(url.rpc = url.rpc,
+    method = "cc_get_accounts", params = list(), keep.trying.rpc = TRUE)$result$accounts)
   
   flag.ids <- unique(na.omit(flag))
   flag.names <- vector("integer", length(flag.ids))
   flag.cities <- vector("integer", length(flag.ids))
   
   for (i in seq_along(flag.ids)) {
-    flag.info <- TownforgeR::tf_rpc_curl(method = "cc_get_flag", params = list(id = flag.ids[i]), 
-      url.rpc = url.townforged, keep.trying.rpc = TRUE)$result
+    flag.info <- TownforgeR::tf_rpc_curl(url.rpc = url.rpc, method = "cc_get_flag",
+      params = list(id = flag.ids[i]), keep.trying.rpc = TRUE)$result
     if (length(flag.info) < 1) {next}
     flag.cities[i] <- flag.info$city
     flag.names[i] <- flag.info$name
   }
   
+  
   flags <- data.table(id = flag.ids, name = flag.names, city = flag.cities)
   
-  cities <- data.table::rbindlist(TownforgeR::tf_rpc_curl(method = "cc_get_cities", params = list(), 
-    url.rpc = url.townforged, keep.trying.rpc = TRUE)$result$cities)
+  cities <- data.table::rbindlist(TownforgeR::tf_rpc_curl(url.rpc = url.rpc,
+    method = "cc_get_cities", params = list(), keep.trying.rpc = TRUE)$result$cities)
   
   setnames(cities, "treasury", "id")
   
@@ -59,7 +60,7 @@ tf_gold_flow <- function(url.rpc) {
   taxes <- events[event == "Paid land tax" & cmd == 6 & (! is.na(flag)), ]
   subsidies <- events[grepl("subsidy", event) & cmd == 6 & is.na(flag) & account %in% treasuries$id, ]
   land.purchases <- events[grepl("Bought", event) & cmd == 3 & (! is.na(flag)), ]
-  
+
   
   payouts.cities <- flags$city[match(payouts$flag, flags$id)]
   
@@ -153,6 +154,7 @@ tf_gold_flow <- function(url.rpc) {
   edges[edge.type == "land_purchase", color := "blue"]
   edges$edge.type <- NULL
   setnames(edges, c("from", "to", "value", "arrows", "color"))
+  
   
   visNetwork::visNetwork(nodes, edges) %>%
     visNetwork::visOptions(highlightNearest = list(enabled = TRUE, degree = list(from = 1, to = 1), 
