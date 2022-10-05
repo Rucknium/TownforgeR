@@ -11,13 +11,14 @@ Description: R-package for handling e.g. RPC interaction with the blockchain-bas
 Depends: R (>= 4.0.0)
 License: GPL-3
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Encoding: UTF-8
 Imports:
 	RCurl,
 	RJSONIO,
 	shiny,
 	DT,
+	data.table,
 	bslib,
 	thematic,
 	readr,
@@ -25,6 +26,6 @@ Imports:
 	plyr,
 	Matrix,
 	lattice,
-	DT,
 	waiter,
-	Cairo
+	Cairo,
+	visNetwork

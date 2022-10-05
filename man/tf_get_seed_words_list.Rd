@@ -5,8 +5,8 @@
 \title{Gather English wallet mnemonic seed words list}
 \usage{
 tf_get_seed_words_list(
- 
-    source.url = "https://raw.githubusercontent.com/monero-project/monero/master/src/mnemonics/english.h",
+  source.url =
+    "https://raw.githubusercontent.com/monero-project/monero/master/src/mnemonics/english.h",
   ...
 )
 }

@@ -76,6 +76,9 @@ uiTF <- shiny::navbarPage(paste("TownforgeR", gsub("`|´", "", packageVersion("T
       )
     )
   ),
+  shiny::tabPanel("Gold Flow",
+    visNetwork::visNetworkOutput("gold_flow_viz", height = "800px")
+  ),
   shiny::tabPanel("Wallet",
     shiny::fluidRow(
       shiny::column(12,

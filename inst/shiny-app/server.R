@@ -105,6 +105,9 @@ serverTF <- function(input, output, session){
     ret
   })
   
+  output$gold_flow_viz <- visNetwork::renderVisNetwork({
+    TownforgeR::tf_gold_flow(url.rpc = url.townforged)
+  })
   
   
   shiny::observeEvent(input$port_submit_button, {
@@ -179,8 +182,9 @@ serverTF <- function(input, output, session){
     
     waiter$show()
     
-    wallet.directory <- "/home/shiny/TownforgeR-wallets"
+    wallet.directory <- paste0("/home/", Sys.info()["user"], "/TownforgeR-wallets")
     # TODO: This is hard-coded now. Want to make it a changeable argument
+    dir.create(wallet.directory)
     
     TownforgeR::tf_server_wallet_restore(wallet.restore.username = input$wallet_restore_username, 
       wallet.restore.password = input$wallet_restore_password, 
@@ -196,8 +200,9 @@ serverTF <- function(input, output, session){
   
   shiny::observeEvent(input$wallet_load_submit_button, {
     
-    wallet.directory <- "/home/shiny/TownforgeR-wallets"
+    wallet.directory <- paste0("/home/", Sys.info()["user"], "/TownforgeR-wallets")
     # TODO: This is hard-coded now. Want to make it a changeable argument
+    dir.create(wallet.directory)
     
     loaded.wallet <- TownforgeR::tf_server_wallet_load(wallet.username = input$wallet_load_username, 
       wallet.password = input$wallet_load_password, wallet.directory = wallet.directory)
